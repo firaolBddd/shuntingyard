@@ -1,5 +1,5 @@
 // binary3node.cpp
-
+//cpp file for consturction everyhting taht was in the headers
 #include "binary3node.h"
 
 #define NULL 0
