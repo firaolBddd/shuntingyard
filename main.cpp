@@ -19,12 +19,12 @@ public:
 
     StackNode(Binary3Node* temp);
 };
-
+//creating the ndoe 
 StackNode::StackNode(Binary3Node* temp) {
     currentNode = temp;
     next = nullptr;
 }
-
+//moving it to next 
 void push(Binary3Node* toPush, StackNode* &top) {
     if (top == nullptr) {
         top = new StackNode(toPush);
@@ -34,7 +34,7 @@ void push(Binary3Node* toPush, StackNode* &top) {
         top = ptr;
     }
 }
-
+//checking if there is sumthin
 Binary3Node* peek(Binary3Node* top) {
     if (top != nullptr)
         return top;
@@ -43,19 +43,21 @@ Binary3Node* peek(Binary3Node* top) {
 
 Binary3Node* peek(StackNode* top) {
     if (top != nullptr)
+        //need this to get postions 
         return top->currentNode;
     return nullptr;
 }
 
 Binary3Node* pop(StackNode* &top) {
     if (top == nullptr)
+        //return to null for memory  
         return nullptr;
 
     Binary3Node* temp = top->currentNode;
     top = top->next;
     return temp;
 }
-
+//startsing from the back 
 void enqueue(Binary3Node* toAdd, Binary3Node* &top, Binary3Node* &rear) {
     if (rear == nullptr) {
         rear = toAdd;
@@ -85,7 +87,7 @@ bool isOperator(char value) {
 bool isDigit(char value) {
     return (value >= '0' && value <= '9');
 }
-
+//checing for the type of oprater 
 int apply(char a, char b, char op) {
     a -= '0';
     b -= '0';
@@ -100,7 +102,7 @@ int apply(char a, char b, char op) {
     else
         return (int)pow(a, b);
 }
-
+//infix 
 void inorder(Binary3Node* node) {
     if (node == nullptr)
         return;
@@ -108,7 +110,7 @@ void inorder(Binary3Node* node) {
     cout << node->getData() << " ";
     inorder(node->getRight());
 }
-
+//post fix
 void postorder(Binary3Node* node) {
     if (node == nullptr)
         return;
@@ -116,7 +118,7 @@ void postorder(Binary3Node* node) {
     postorder(node->getRight());
     cout << node->getData() << " ";
 }
-
+//prefix
 void preorder(Binary3Node* node) {
     if (node == nullptr)
         return;
@@ -126,13 +128,14 @@ void preorder(Binary3Node* node) {
 }
 
 int main() {
+    //precedend the order in which they matter 
     map<char, int> precedence;
     precedence['^'] = 4;
     precedence['*'] = 3;
     precedence['/'] = 3;
     precedence['+'] = 2;
     precedence['-'] = 2;
-
+//intatilze evryhting to null
     StackNode* stackTop = nullptr;
     StackNode* valueStack = nullptr;
     Binary3Node* outTop = nullptr;
@@ -143,7 +146,7 @@ int main() {
 
     cout << "Please enter an expression in INFIX form" << endl;
     cin.getline(expression, 100, '\n');
-
+//checks for some of the order
     for (int i = 0; i < strlen(expression); i++) {
         if (expression[i] == ' ')
             continue;
@@ -153,10 +156,12 @@ int main() {
         } else if (temp == '(') {
             push(new Binary3Node(temp), stackTop);
         } else if (temp == ')') {
+            //looking for a a cause to start or terminate   case with (
             while (peek(stackTop) != nullptr && peek(stackTop)->getData() != '(') {
                 Binary3Node* op = pop(stackTop);
                 enqueue(op, outTop, outRear);
             }
+            //pop func to spit vars out  them back out 
             pop(stackTop);
         } else if (isOperator(temp) && (peek(stackTop) == nullptr || peek(stackTop)->getData() == '(')) {
             push(new Binary3Node(temp), stackTop);
@@ -177,13 +182,16 @@ int main() {
 
     StackNode* expressionTree = nullptr;
     Binary3Node* front = peek(outTop);
-
+//when the front is finshed 
     while (front != nullptr) {
+        //retrive the data 
+        //will precident matter 
         if (front->getData() == '+' || front->getData() == '-' || front->getData() == '/' ||
             front->getData() == '*' || front->getData() == '^') {
             Binary3Node* temp = new Binary3Node(front->getData());
             Binary3Node* a = pop(expressionTree);
             Binary3Node* b = pop(expressionTree);
+            //out them to stach or queeue or like the side
             temp->setRight(a);
             temp->setLeft(b);
             push(temp, expressionTree);
@@ -196,7 +204,7 @@ int main() {
         front = peek(outTop);
     }
     cout << endl;
-
+//just callig all the fuction after asking the input 
     char userInput[10];
     while (true) {
         cout << "Enter PREFIX, INFIX, POSTFIX, or QUIT" << endl;
